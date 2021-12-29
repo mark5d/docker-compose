@@ -1,0 +1,18 @@
+version: '3.6'
+services:
+  web:
+    image: 'gitlab/gitlab-ce:14.6.0-ce.0'  #ce为社区版，ee为企业版
+    # restart: always
+    hostname: '192.168.100.68'
+    environment:  
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://192.168.100.68:8929'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2224
+    ports:
+      - '8929:8929'
+      - '2224:22'
+    volumes:
+      - '$PWD/config:/etc/gitlab'      #windows需要修改$PWD为对应的目录名如：D:\
+      - '$PWD/logs:/var/log/gitlab'
+      - '$PWD/data:/var/opt/gitlab'
+    shm_size: '256m'
