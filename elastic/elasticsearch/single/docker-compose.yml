@@ -1,0 +1,12 @@
+version: '3.6'
+services:
+  elasticsearch-single:
+    image: elasticsearch:7.15.2
+    container_name: elasticsearch-single7.15.2
+    environment:
+      - ES_JAVA_OPTS="-Xms2096m -Xmx4096m" #限制内存使用
+      - discovery.type="single-node"
+    ports:
+      - 9200:9200
+      - 9300:9300
+
