@@ -1,0 +1,12 @@
+version: '3.6'
+services:
+  web:
+    image: 'portainer/portainer-ce:2.11.0-alpine'
+    ports:
+      - 18000:8000
+      - 19443:9443
+    container_name: portainer
+    # restart: always
+    volumes:
+      - '$PWD/docker.sock:/var/run/docker.sock'
+      - '$PWD/data:data'
