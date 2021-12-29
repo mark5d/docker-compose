@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  minio-s3gateway:
+    image: quay.io/minio/minio
+    container_name: minio-s3gateway
+    command: ["gateway", "s3","--console-address",":9001"]
+    environment:
+      - MINIO_ROOT_USER=aws_s3_access_key         #IAM账号的access_key/secret_key
+      - MINIO_ROOT_PASSWORD=aws_s3_secret_key
+    ports:
+      - 9000:9000
+      - 9001:9001
+    
+
