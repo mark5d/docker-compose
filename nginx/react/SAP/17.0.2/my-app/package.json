@@ -15,8 +15,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "deploy:dev":"react-scripts build && docker-compose -f ./docker/docker-compose.yml up -d"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
