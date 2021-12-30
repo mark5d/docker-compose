@@ -1,0 +1,13 @@
+version: '3.6'
+services:
+  kong-database:
+    image: postgres:9.6
+    container_name: kong-database9.6
+    environment:
+      - POSTGRES_USER=kong
+      - POSTGRES_PASSWORD=kong
+      - POSTGRES_DB=kong
+  
+  kong-migrations-bootstrap:
+    image:
+    

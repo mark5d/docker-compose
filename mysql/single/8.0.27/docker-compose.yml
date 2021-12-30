@@ -1,0 +1,17 @@
+version: '3.6'
+services:
+  mysql:
+    image: mysql:8.0.27
+    container_name: mysql8.0.27
+    command: ["--default-authentication-plugin=mysql_native_password","--character-set-server=utf8mb4","--collation-server=utf8mb4_unicode_ci"]
+    # restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: it9s2cu
+      MYSQL_DATABASE: mybase
+      MYSQL_USER: mybaseuser
+      MYSQL_PASSWORD: mybaseuserit9s2cu
+    volumes:
+      - ${PWD}/conf:/etc/mysql/conf.d 
+      - ${PWD}/data:/var/lib/mysql
+    ports:
+      - 3306:3306
