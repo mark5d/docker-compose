@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  mongo:
+    build: ./
+    cpu_shares: 512
+    mem_limit: 1024m
+    # restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 78xYv9fyLnmxfUFpuy
+      MONGO_INITDB_DATABASE: demo
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '10'
