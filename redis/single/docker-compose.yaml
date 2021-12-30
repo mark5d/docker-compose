@@ -6,7 +6,7 @@ services:
     # command: ["redis", "redis-server","/usr/local/etc/redis/redis.conf"]  #使用自定义配置文件启动
     command: ["--requirepass","it9s2cu"]    #默认密码
     volumes:
-      - $PWD/conf:/usr/local/etc/redis
-      - $PWD/data:/data
+      - ./conf:/usr/local/etc/redis
+      - ./data:/data
     ports:
       - 6379:6379

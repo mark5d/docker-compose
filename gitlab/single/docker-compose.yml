@@ -12,7 +12,7 @@ services:
       - '8929:8929'
       - '2224:22'
     volumes:
-      - '$PWD/config:/etc/gitlab'      #windows需要修改$PWD为对应的目录名如：D:\
-      - '$PWD/logs:/var/log/gitlab'
-      - '$PWD/data:/var/opt/gitlab'
+      - './config:/etc/gitlab'      #windows需要修改.为对应的目录名如：D:\
+      - './logs:/var/log/gitlab'
+      - './data:/var/opt/gitlab'
     shm_size: '256m'

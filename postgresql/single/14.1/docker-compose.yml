@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_PASSWORD: it9s2cu
     volumes:
-      - $PWD/data:/var/lib/postgresql/data 
-      - $PWD/conf:/etc/postgresql/postgresql.conf
+      - ./data:/var/lib/postgresql/data 
+      - ./conf:/etc/postgresql/postgresql.conf
     ports:
       - 5432:5432

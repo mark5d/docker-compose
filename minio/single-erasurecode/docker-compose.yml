@@ -8,14 +8,14 @@ services:
       - MINIO_ROOT_USER=admin
       - MINIO_ROOT_PASSWORD=admin123
     volumes:
-      - $PWD/data1:/data1
-      - $PWD/data2:/data2
-      - $PWD/data3:/data3
-      - $PWD/data4:/data4
-      - $PWD/data5:/data5
-      - $PWD/data6:/data6
-      - $PWD/data7:/data7
-      - $PWD/data8:/data8
+      - ./data1:/data1
+      - ./data2:/data2
+      - ./data3:/data3
+      - ./data4:/data4
+      - ./data5:/data5
+      - ./data6:/data6
+      - ./data7:/data7
+      - ./data8:/data8
     ports:
       - 9000:9000
       - 9001:9001

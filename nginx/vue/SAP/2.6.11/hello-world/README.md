@@ -22,3 +22,5 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### `sh ./deploy.sh` 打包docker镜像，并启动对应容器
