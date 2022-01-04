@@ -37,14 +37,17 @@ services:
     container_name: prometheus
     hostname: prometheus
     restart: always
-    # volumes:
-    #     - /usr/local/src/config/prometheus.yml:/etc/prometheus/prometheus.yml
+    volumes:
+        - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
     #     - /usr/local/src/config/node_down.yml:/etc/prometheus/node_down.yml
     ports:
       - "9090:9090"
     networks:
       - monitor
     depends_on:
+      - mysql_exporter
+    links:
+      - mysql
       - mysql_exporter
 
   grafana:
