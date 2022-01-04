@@ -11,7 +11,7 @@ services:
       MYSQL_USER: mybaseuser
       MYSQL_PASSWORD: mybaseuserit9s2cu
     volumes:
-      - ${PWD}/conf:/etc/mysql/conf.d 
-      - ${PWD}/data:/var/lib/mysql
+      - ./conf:/etc/mysql/conf.d 
+      - ./data:/var/lib/mysql
     ports:
       - 3306:3306
