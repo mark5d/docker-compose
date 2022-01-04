@@ -1,0 +1,65 @@
+version: '3.7'
+services:
+  mysql:
+    image: mysql:8.0.27
+    container_name: mysql8.0.27
+    command: ["--default-authentication-plugin=mysql_native_password","--character-set-server=utf8mb4","--collation-server=utf8mb4_unicode_ci"]
+    # restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: it9s2cu
+      MYSQL_DATABASE: mybase
+      # MYSQL_USER: mybaseuser
+      # MYSQL_PASSWORD: mybaseuserit9s2cu
+    volumes:
+      - ./conf:/etc/mysql/conf.d 
+      - ./data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - monitor
+
+  mysql_exporter:
+    image: prom/mysqld-exporter
+    container_name: mysql_exporter
+    environment:
+      - DATA_SOURCE_NAME="root:it9s2cu@(mysql:3306)/"
+    ports:
+      - 9104:9104
+    networks:
+      - monitor
+    depends_on:
+      - mysql
+    links:
+      - mysql
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    hostname: prometheus
+    restart: always
+    # volumes:
+    #     - /usr/local/src/config/prometheus.yml:/etc/prometheus/prometheus.yml
+    #     - /usr/local/src/config/node_down.yml:/etc/prometheus/node_down.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitor
+    depends_on:
+      - mysql_exporter
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    hostname: grafana
+    # restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - monitor
+    depends_on:
+      - prometheus
+
+networks:
+  monitor:
+    driver: bridge
+    
