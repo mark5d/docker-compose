@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  go-fastdfs:
+    image: 'sjqzhang/go-fastdfs'
+    ports:
+      - '18080:8080'
+    volumes:
+      - ./data:/data
+    environment:
+      - GO_FASTDFS_DIR=/data
+                                

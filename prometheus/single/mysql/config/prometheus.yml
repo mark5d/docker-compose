@@ -26,7 +26,7 @@ scrape_configs:
 
   - job_name: 'mysql'
     static_configs:
-     - targets: ['mysql_exporter:9104']
+     - targets: ['192.168.100.81:9104']
        labels:
-         instance: mysql:3306
+         instance: 192.168.100.81:3306
     
