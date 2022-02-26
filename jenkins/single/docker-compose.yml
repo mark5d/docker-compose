@@ -1,0 +1,12 @@
+version: '3.6'
+services:
+  web:
+    image: 'jenkinsci/blueocean:1.25.2' 
+    restart: always
+    user: root
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - './docker.sock:/var/run/docker.sock'
+      - './data:/var/jenkins_home'
