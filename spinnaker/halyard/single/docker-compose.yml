@@ -1,0 +1,12 @@
+version: "3.6"
+services:
+  halyard:
+    image: gcr.io/spinnaker-marketplace/halyard:stable
+    volumes:
+      - ./.hal:/home/spinnaker/.hal
+    ports:
+      - 8084:8084
+      - 9000:9000
+    
+
+
