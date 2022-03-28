@@ -14,9 +14,6 @@ services:
         limits:
           cpus: '1'
           memory: 2048M
-        reservations:
-          cpus: '1'
-          memory: 2048M
 
   kafka:
     image: confluentinc/cp-kafka:5.5.5
@@ -34,10 +31,6 @@ services:
         limits:
           cpus: '4'
           memory: 8192M
-        reservations:
-          cpus: '4'
-          memory: 8192M
-    
 
   kafka-manager:
     image: sheepkiller/kafka-manager
@@ -54,11 +47,3 @@ services:
         limits:
           cpus: '1'
           memory: 2048M
-        reservations:
-          cpus: '1'
-          memory: 2048M
-    
-
-
-
-  
