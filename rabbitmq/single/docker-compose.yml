@@ -3,7 +3,7 @@ services:
   rabbitmq:
     image: rabbitmq:3.8.3-management
     container_name: rabbitmq
-    # restart: always
+    restart: always
     # hostname: myRabbitmq
     ports:
       - 15672:15672

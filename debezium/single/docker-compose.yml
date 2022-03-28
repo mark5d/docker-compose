@@ -1,0 +1,11 @@
+docker run -d --name connect --net kafka_default -p 8083:8083 
+-e GROUP_ID=1 
+-e CONFIG_STORAGE_TOPIC=my_connect_configs 
+-e OFFSET_STORAGE_TOPIC=my_connect_offsets 
+-e STATUS_STORAGE_TOPIC=my_connect_statuses 
+-e BOOTSTRAP_SERVERS=kafka:9092 
+--link kafka_zookeeper_1:zookeeper 
+--link kafka_kafka_1:kafka 
+--link mysql8.0.27:mysql debezium/connect:1.8
+
+docker run -d --name connect-ui --net kafka_default --link connect:connect  -p 8888:8080 -e KAFKA_CONNECT_URIS=connect:8083 debezium/debezium-ui:1.8

@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.6'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:5.5.5
@@ -9,6 +9,14 @@ services:
       ZOOKEEPER_SYNC_LIMIT: 2
     ports:
       - 2181:2181
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2048M
+        reservations:
+          cpus: '1'
+          memory: 2048M
 
   kafka:
     image: confluentinc/cp-kafka:5.5.5
@@ -17,12 +25,19 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_BROKER_ID: 2
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  #  volumes:
-  #     - ./docker.sock:/var/run/docker.sock
     ports:
       - 9092:9092 # Uncomment to make Kafka available externally
     links:
       - zookeeper
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8192M
+        reservations:
+          cpus: '4'
+          memory: 8192M
+    
 
   kafka-manager:
     image: sheepkiller/kafka-manager
@@ -34,6 +49,15 @@ services:
       KM_ARGS: -Djava.net.preferIPv4Stack=true
     ports:
       - "9000:9000"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2048M
+        reservations:
+          cpus: '1'
+          memory: 2048M
+    
 
 
 
