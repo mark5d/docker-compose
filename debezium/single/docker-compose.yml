@@ -1,11 +1,86 @@
-docker run -d --name connect --net kafka_default -p 8083:8083 
--e GROUP_ID=1 
--e CONFIG_STORAGE_TOPIC=my_connect_configs 
--e OFFSET_STORAGE_TOPIC=my_connect_offsets 
--e STATUS_STORAGE_TOPIC=my_connect_statuses 
--e BOOTSTRAP_SERVERS=kafka:9092 
---link kafka_zookeeper_1:zookeeper 
---link kafka_kafka_1:kafka 
---link mysql8.0.27:mysql debezium/connect:1.8
+version: '3.3'
+services:
+  mysql:
+    image: mysql:8.0.26
+    environment:
+      - MYSQL_DATABASE=debezium
+      - MYSQL_USER=debezium
+      - MYSQL_PASSWORD=password
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    command: mysqld --default-authentication-plugin=mysql_native_password --lower_case_table_names=1 --skip-ssl --character_set_server=utf8mb4 --explicit_defaults_for_timestamp
+    ports:
+      - '3306:3306'
+    # volumes:
+    #   - ./data/mysql:/var/lib/mysql
+    #   - ./conf/mysql/conf/my.cnf:/etc/mysql/my.cnf
+  
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.5.5
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SYNC_LIMIT: 2
+    ports:
+      - 2181:2181
 
-docker run -d --name connect-ui --net kafka_default --link connect:connect  -p 8888:8080 -e KAFKA_CONNECT_URIS=connect:8083 debezium/debezium-ui:1.8
+  kafka:
+    image: confluentinc/cp-kafka:5.5.5
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKER_ID: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - 9092:9092 # Uncomment to make Kafka available externally
+
+  connect:
+    image: debezium/connect:1.9
+    links:
+      - kafka
+      - mysql
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=my_connect_configs
+      - OFFSET_STORAGE_TOPIC=my_connect_offsets
+      - STATUS_STORAGE_TOPIC=my_connect_statuses
+    ports:
+      - 8083:8083
+
+  debezium-ui:
+    image: debezium/debezium-ui:1.9
+    links:
+      - connect
+    environment:
+      - KAFKA_CONNECT_URIS=http://connect:8083
+    ports:
+      - 8888:8080
+
+  kafka-manager:
+    image: sheepkiller/kafka-manager
+    links:
+      - zookeeper
+    environment:
+      ZK_HOSTS: 'zookeeper:2181'
+      APPLICATION_SECRET: 'letmein'
+      KM_ARGS: '-Djava.net.preferIPv4Stack=true'
+    ports:
+      - "9000:9000"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2048M
+  
+
+# docker run -d --name connect --net bitnami_default -p 8083:8083 \
+#  -e GROUP_ID=1 \
+# -e CONFIG_STORAGE_TOPIC=my_connect_configs \
+# -e OFFSET_STORAGE_TOPIC=my_connect_offsets \
+# -e STATUS_STORAGE_TOPIC=my_connect_statuses \
+# -e BOOTSTRAP_SERVERS=kafka:9092 \
+# --link bitnami_zookeeper_1:zookeeper \
+# --link bitnami_kafka_1:kafka \
+# --link mysql8.0.27:mysql debezium/connect:1.9
+
+# docker run -d --name connect-ui --net bitnami_default --link connect:connect  -p 8888:8080 -e KAFKA_CONNECT_URIS=connect:8083 debezium/debezium-ui:1.9
