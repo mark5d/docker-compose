@@ -1,15 +1,17 @@
 version: "3"
- 
+
 networks:
  kong-net:
   driver: bridge
- 
+
 services:
- 
+
+
   #######################################
   # Postgres: The database used by Kong
   #######################################
   kong-database:
+    container_name: kong-database
     image: postgres:9.6
     restart: always
     networks:
@@ -19,18 +21,22 @@ services:
       POSTGRES_DB: kong
       POSTGRES_PASSWORD: kong
     ports:
-      - "5432:5432"
+      - 5432:5432
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "kong"]
       interval: 5s
       timeout: 5s
       retries: 5
- 
+    volumes:
+      - ./config/kong_data:/var/lib/postgresql/data
+
+
   #######################################
   # Kong database migration
   #######################################
   kong-migration:
-    image: kong:latest
+    container_name: kong-migration
+    image: kong:2.8.1
     command: "kong migrations bootstrap"
     networks:
       - kong-net
@@ -44,12 +50,14 @@ services:
       - kong-database
     depends_on:
       - kong-database
- 
+
+
   #######################################
   # Kong: The API Gateway
   #######################################
-  kong:
-    image: kong:latest
+  kong-gateway:
+    container_name: kong-gateway
+    image: kong:2.8.1
     restart: always
     networks:
       - kong-net
@@ -70,16 +78,19 @@ services:
       timeout: 2s
       retries: 15
     ports:
-      - "8001:8001"
-      - "8000:8000"
-      - "8443:8443"
- 
- 
+      - 8001:8001
+      - 8000:8000
+      - 8443:8443
+    volumes:
+      - ./config/kong:/opt/kong
+
+
   #######################################
   # Konga database prepare
   #######################################
   konga-prepare:
-    image: pantsel/konga:latest
+    container_name: konga-prepare
+    image: pantsel/konga:0.14.9
     command: "-c prepare -a postgres -u postgresql://kong:kong@kong-database:5432/konga"
     networks:
       - kong-net
@@ -93,12 +104,14 @@ services:
       - kong-database
     depends_on:
       - kong-database
- 
+
+
   #######################################
   # Konga: Kong GUI
   #######################################
-  konga:
-    image: pantsel/konga:latest
+  kong-gui:
+    container_name: kong-gui
+    image: pantsel/konga:0.14.9
     restart: always
     networks:
      - kong-net
@@ -109,7 +122,7 @@ services:
     links:
       - kong-database
     depends_on:
-      - kong
+      - kong-gateway
       - konga-prepare
     ports:
-      - "1337:1337"
+      - 1337:1337
